@@ -1,0 +1,44 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: shared_db
+      POSTGRES_USER: quants_db
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  config-server:
+    image: your-config-server-image
+    build:
+      context: ./config-server
+    ports:
+      - "8888:8888"
+    depends_on:
+      - postgres
+
+  discovery-server:
+    image: your-discovery-server-image
+    build:
+      context: ./discovery-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      - postgres
+      - config-server
+
+  api-gateway:
+    image: your-api-gateway-image
+    build:
+      context: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - discovery-server
+
+volumes:
+  postgres_data:

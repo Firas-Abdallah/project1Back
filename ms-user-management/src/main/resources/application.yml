@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shared_db
+    username: your_db_username
+    password: your_db_password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  config:
+    import: optional:configserver:http://localhost:8888
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
